@@ -15,11 +15,10 @@ services:
       - 9000:9000
 
   db:
-    image: mysql:5.7
+    image: training_db:latest
     container_name: training-db
     restart: always
     build: ./db
-    image: training_db:latest
     environment:
       MYSQL_DATABASE: 'db'
       MYSQL_USER: 'user'
@@ -31,6 +30,42 @@ services:
       - '3306'
     volumes:
       - my-db:/var/lib/mysql
+
+  clients:
+    image: ghcr.io/mludeiro/training-go-clients:latest
+    container_name: clients
+    environment:
+      MYSQL_DATABASE: 'TRAINING_CLIENTS'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+    ports:
+      - '5000:5000'
+    expose:
+      - '5000'
+
+  invoices:
+    image: ghcr.io/mludeiro/training-go-invoices:latest
+    container_name: invoices
+    environment:
+      MYSQL_DATABASE: 'TRAINING_INVOICES'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+    ports:
+      - '5002:5002'
+    expose:
+      - '5002'
+
+  products:
+    image: ghcr.io/mludeiro/training-go-products:latest
+    container_name: products
+    environment:
+      MYSQL_DATABASE: 'TRAINING_PRODUCTS'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+    ports:
+      - '5001:5001'
+    expose:
+      - '5001'
 
 volumes:
   my-db:
